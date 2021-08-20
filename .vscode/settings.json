@@ -1,0 +1,20 @@
+{
+  "python.linting.pylintEnabled": false,
+  "python.linting.enabled": true,
+  "python.sortImports.args": [
+    "-rc",
+    "-sp isort.cfg"
+  ],
+  "python.linting.flake8Enabled": true,
+  "python.linting.lintOnSave": true,
+  "python.linting.flake8Args": [
+    "--max-line-length=100",
+    "--ignore=BLK100,D100,W503"
+  ],
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "python.defaultInterpreterPath": "venv/bin/python"
+}
