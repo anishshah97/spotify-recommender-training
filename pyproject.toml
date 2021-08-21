@@ -23,10 +23,18 @@ description = ""
 authors = ["Anish Shah <anish.shah.emails@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "<=3.8"
+python = "3.8"
 kedro = "^0.17.4"
 kedro-viz = "^3.14.0"
 kedro-mlflow = "^0.7.3"
+flake8 = "^3.9.2"
+autopep8 = "^1.5.7"
+dask = {extras = ["distributed"], version = "^2021.8.1"}
+jupyterlab = "^3.1.7"
+bokeh = "^2.3.3"
+loguru = "^0.5.3"
+pyarrow = "^5.0.0"
+tqdm = "^4.62.1"
 
 [tool.poetry.dev-dependencies]
 

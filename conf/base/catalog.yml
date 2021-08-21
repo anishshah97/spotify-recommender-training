@@ -2,3 +2,7 @@
 #
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://kedro.readthedocs.io/en/stable/05_data/01_data_catalog.html
+
+spotify_mpd_raw:
+  type: spotify_recommendations.extras.dask.JSONDataSet.BaggedJSONDataSet
+  filepath: ${DATA_DIR}/01_raw/spotify_mpd/mpd.slice.1000-1999.json
