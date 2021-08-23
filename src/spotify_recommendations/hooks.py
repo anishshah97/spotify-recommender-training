@@ -30,10 +30,14 @@
 import os
 from typing import Any, Dict, Iterable, Optional
 
+from dotenv import find_dotenv, load_dotenv
 from kedro.config import ConfigLoader, TemplatedConfigLoader
 from kedro.framework.hooks import hook_impl
 from kedro.io import DataCatalog
 from kedro.versioning import Journal
+
+# BUG: Remove?
+load_dotenv(find_dotenv())
 
 
 class ProjectHooks:

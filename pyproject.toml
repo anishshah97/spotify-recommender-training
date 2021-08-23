@@ -23,7 +23,7 @@ description = ""
 authors = ["Anish Shah <anish.shah.emails@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "3.8"
+python = "~3.8"
 kedro = "^0.17.4"
 kedro-viz = "^3.14.0"
 kedro-mlflow = "^0.7.3"
@@ -35,6 +35,9 @@ bokeh = "^2.3.3"
 loguru = "^0.5.3"
 pyarrow = "^5.0.0"
 tqdm = "^4.62.1"
+python-dotenv = "^0.19.0"
+spotipy = "^2.19.0"
+flatdict = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
 

@@ -1,0 +1,72 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [{
+      "name": "Kedro Run",
+      "type": "python",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "module": "kedro",
+      "args": [
+        "run",
+        "--pipeline",
+        "prepare_mpd"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${cwd}"
+      }
+      // Any other arguments should be passed as a comma-seperated-list
+      // e.g "args": ["run", "--pipeline", "pipeline_name"]
+    },
+    {
+      "name": "JupyterLab",
+      "type": "python",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "module": "kedro",
+      "args": [
+        "jupyter",
+        "lab"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${cwd}"
+      }
+    },
+    {
+      "name": "Kedro Viz",
+      "type": "python",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "module": "kedro",
+      "args": [
+        "viz"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${cwd}"
+      }
+      // Any other arguments should be passed as a comma-seperated-list
+      // e.g "args": ["run", "--pipeline", "pipeline_name"]
+    },
+    {
+      "name": "Kedro Mlflow UI",
+      "type": "python",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "module": "kedro",
+      "args": [
+        "mlflow ui"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${cwd}"
+      }
+      // Any other arguments should be passed as a comma-seperated-list
+      // e.g "args": ["run", "--pipeline", "pipeline_name"]
+    }
+  ]
+}

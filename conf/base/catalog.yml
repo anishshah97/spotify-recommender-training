@@ -3,6 +3,40 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://kedro.readthedocs.io/en/stable/05_data/01_data_catalog.html
 
-spotify_mpd_raw:
-  type: spotify_recommendations.extras.dask.JSONDataSet.BaggedJSONDataSet
-  filepath: ${DATA_DIR}/01_raw/spotify_mpd/mpd.slice.1000-1999.json
+# spotify_mpd_raw:
+#   type: spotify_recommendations.extras.dask.JSONDataSet.BaggedJSONDataSet
+#   filepath: ${DATA_DIR}/01_raw/spotify_mpd/mpd.slice.1000-1999.json
+
+cleaned_mpd_tracks:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/cleaned_spotify_mpd/*/tracks.parquet
+
+deduped_cleaned_mpd_tracks:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/deduped_cleaned_spotify_mpd
+
+mpd_track_ids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/deduped_cleaned_spotify_mpd
+  load_args:
+    columns: "track_id"
+
+mpd_track_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_features/*.parquet
+
+scraped_mpd_track_feature_ids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_features/*.parquet
+  load_args:
+    columns: "track_spid"
+
+mpd_track_artist_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_artist_features/*.parquet
+
+scraped_mpd_track_artist_feature_ids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_artist_features/*.parquet
+  load_args:
+    columns: "artist_spid"
