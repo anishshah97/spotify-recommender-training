@@ -12,7 +12,7 @@
       "args": [
         "run",
         "--pipeline",
-        "prepare_mpd"
+        "scrape_spotify_for_mpd"
       ],
       "cwd": "${workspaceFolder}",
       "env": {

@@ -41,7 +41,10 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
     """
     prepare_mpd = mpd.prepare_mpd_dataset()
+    scrape_spotify_for_mpd = mpd.scrape_spotify_for_mpd()
+
     return {
         "__default__": Pipeline([]),
-        "prepare_mpd": prepare_mpd
+        "prepare_mpd": prepare_mpd,
+        "scrape_spotify_for_mpd": scrape_spotify_for_mpd
     }

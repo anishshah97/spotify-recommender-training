@@ -12,6 +12,7 @@ from tqdm import tqdm
 
 
 # Note: Assuming the workspace the script is coming from is the relational path from which to parse data from
+# TODO: need to deal with s3 variant
 def determine_paths_to_scrape():
     data_path = Path(Path().resolve(), os.environ.get("DATA_DIR", "data"))
     raw_mpd_dir = Path(data_path, "01_raw", "spotify_mpd")

@@ -156,6 +156,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-*/dask-worker-space/*
+dask-worker-space/
 
 mlruns/

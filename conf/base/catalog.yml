@@ -7,6 +7,10 @@
 #   type: spotify_recommendations.extras.dask.JSONDataSet.BaggedJSONDataSet
 #   filepath: ${DATA_DIR}/01_raw/spotify_mpd/mpd.slice.1000-1999.json
 
+cleaned_mpd_playlists:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/cleaned_spotify_mpd/*/playlist.parquet
+
 cleaned_mpd_tracks:
   type: dask.ParquetDataSet
   filepath: ${DATA_DIR}/02_intermediate/cleaned_spotify_mpd/*/tracks.parquet
@@ -40,3 +44,15 @@ scraped_mpd_track_artist_feature_ids:
   filepath: ${DATA_DIR}/03_primary/mpd_track_artist_features/*.parquet
   load_args:
     columns: "artist_spid"
+
+# train_mpd_pids_to_tids:
+#   type: pandas.ParquetDataSet
+#   filepath: ${DATA_DIR}/03_primary/train_mpd_pids_to_tids.parquet
+
+# test_mpd_pids_to_tids:
+#   type: pandas.ParquetDataSet
+#   filepath: ${DATA_DIR}/03_primary/test_mpd_pids_to_tids.parquet
+
+split_mpd_pids_to_tids:
+  type: pandas.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/split_mpd_pids_to_tids.parquet

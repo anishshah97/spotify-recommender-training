@@ -1,0 +1,5 @@
+track_id_col: "track_id"
+artist_id_col: "artist_id"
+
+track_feature_type: "track"
+artist_feature_type: "artist"
