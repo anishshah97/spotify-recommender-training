@@ -42,9 +42,13 @@ def register_pipelines() -> Dict[str, Pipeline]:
     """
     prepare_mpd = mpd.prepare_mpd_dataset()
     scrape_spotify_for_mpd = mpd.scrape_spotify_for_mpd()
+    insert_into_mongo = mpd.insert_into_mongo()
+    perform_cosine_experiment = mpd.perform_cosine_experiment()
 
     return {
         "__default__": Pipeline([]),
         "prepare_mpd": prepare_mpd,
-        "scrape_spotify_for_mpd": scrape_spotify_for_mpd
+        "scrape_spotify_for_mpd": scrape_spotify_for_mpd,
+        "insert_into_mongo": insert_into_mongo,
+        "perform_cosine_experiment": perform_cosine_experiment
     }

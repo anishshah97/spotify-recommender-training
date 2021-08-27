@@ -54,5 +54,28 @@ scraped_mpd_track_artist_feature_ids:
 #   filepath: ${DATA_DIR}/03_primary/test_mpd_pids_to_tids.parquet
 
 split_mpd_pids_to_tids:
-  type: pandas.ParquetDataSet
-  filepath: ${DATA_DIR}/03_primary/split_mpd_pids_to_tids.parquet
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/split_mpd_pids_to_tids
+
+selected_mpd_playlist_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/04_feature/selected_mpd_playlist_features
+
+selected_mpd_track_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/04_feature/selected_mpd_track_features
+
+# playlist_training:
+#   type: dask.ParquetDataSet
+#   filepath: ${DATA_DIR}/05_model_input/playlist_training
+
+cosine_model:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataSet
+  data_set:
+    type: kedro_mlflow.io.models.MlflowModelSaverDataSet
+    flavor: spotify_recommendations.extras.mlflow.cosine_model
+    pyfunc_workflow: python_model # or loader_module
+    filepath: ${DATA_DIR}/06_models/cosine_model
+# cosine_model:
+#   type: pickle.PickleDataSet
+#   filepath: ${DATA_DIR}/06_models/cosine_model

@@ -12,7 +12,7 @@
       "args": [
         "run",
         "--pipeline",
-        "scrape_spotify_for_mpd"
+        "insert_into_mongo"
       ],
       "cwd": "${workspaceFolder}",
       "env": {
