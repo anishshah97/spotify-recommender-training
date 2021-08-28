@@ -240,14 +240,14 @@ def log_model(
         **kwargs
     )
 
+# BUG: Must reindex at track_spid
+
 
 def _load_model(path):
     # Read from pickle or joblib
     # model = pickle.load(open(path, "rb"))
     # model = joblib.load(path)
-    logger.info(path)
-    model = CosineModel(pd.read_parquet(path))
-    logger.info(type(model))
+    model = CosineModel(pd.read_parquet(path).set_index("track_spid"))
     return model
 
 
@@ -256,7 +256,6 @@ def _load_pyfunc(path):
     Load PyFunc implementation. Called by ``pyfunc.load_pyfunc``.
 
     """
-    logger.info(path)
     return _load_model(path)
 
 
@@ -282,5 +281,4 @@ def load_model(model_uri):
         model_path=local_model_path, flavor_name=FLAVOR_NAME)
     cosine_model_file_path = os.path.join(
         local_model_path, flavor_conf.get("data", "db.parquet"))
-    logger.info(cosine_model_file_path)
     return _load_model(path=cosine_model_file_path)

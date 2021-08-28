@@ -24,6 +24,6 @@ def evaluate_cosine_model(cosine_model, split_mpd_pids_to_tids, row_limit=10):
     needed_mpd_pids_to_tids_cats = split_mpd_pids_to_tids[["train", "test"]].compute()
     subset_needed_mpd_pids_to_tids_cats = needed_mpd_pids_to_tids_cats.sample(row_limit)
     all_scores = subset_needed_mpd_pids_to_tids_cats.progress_apply(
-        lambda row: cosine_model.evaluate(row["train"], row["test"]), axis=1)
+        lambda row: cosine_model._evaluate(row["train"], row["test"]), axis=1)
     logger.info(all_scores)
     return all_scores

@@ -12,7 +12,7 @@
       "args": [
         "run",
         "--pipeline",
-        "insert_into_mongo"
+        "perform_cosine_experiment"
       ],
       "cwd": "${workspaceFolder}",
       "env": {
