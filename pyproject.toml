@@ -36,6 +36,7 @@ spotipy = "^2.19.0"
 scikit-learn = "^0.24.2"
 networkx = "^2.6.2"
 pymongo = {extras = ["srv"], version = "^3.12.0"}
+kedro-docker = "^0.2.2"
 
 [tool.poetry.dev-dependencies]
 ipywidgets = "^7.6.3"

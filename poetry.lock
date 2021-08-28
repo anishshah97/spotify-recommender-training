@@ -928,6 +928,18 @@ yaml = ["PyYAML (>=4.2,<6.0)", "pandas (>=0.24)"]
 "yaml.yamldataset" = ["pandas (>=0.24)", "PyYAML (>=4.2,<6.0)"]
 
 [[package]]
+name = "kedro-docker"
+version = "0.2.2"
+description = "Kedro-Docker makes it easy to package Kedro projects with Docker."
+category = "main"
+optional = false
+python-versions = ">=3.6, <3.9"
+
+[package.dependencies]
+kedro = ">=0.16.0"
+semver = ">=2.10,<3.0"
+
+[[package]]
 name = "kedro-mlflow"
 version = "0.7.3"
 description = "A kedro-plugin to use mlflow in your kedro projects"
@@ -1683,7 +1695,7 @@ numpy = ">=1.16.5,<1.23.0"
 name = "semver"
 version = "2.13.0"
 description = "Python helper for Semantic Versioning (http://semver.org/)"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
@@ -2066,7 +2078,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.8"
-content-hash = "eab8d75ecf8a85bf977c802bae08cdae9b58cb4bf16b008f8c5baa8041302eaf"
+content-hash = "0951debf7d52b7514a5e52a950f5032603600007fe5759b85bd6cc6c6cdae61a"
 
 [metadata.files]
 aiofiles = [
@@ -2491,6 +2503,10 @@ jupyterlab-widgets = [
 kedro = [
     {file = "kedro-0.17.4-py3-none-any.whl", hash = "sha256:a949e4f87f1bebbb26d3cb859aaae9288a8db108d93a90fcb9dfa621c278c6c0"},
     {file = "kedro-0.17.4.tar.gz", hash = "sha256:7bd30a622599ade5771d0b9b58e67bf67455b2309e5bf016e53d6dd856f9bc17"},
+]
+kedro-docker = [
+    {file = "kedro-docker-0.2.2.tar.gz", hash = "sha256:534d8ca86ee27e836ea6fe2bd64f9de7f70e35208291d7c0b09d7ae7cb2920ee"},
+    {file = "kedro_docker-0.2.2-py3-none-any.whl", hash = "sha256:4165a0049f16a63896eb2b4006015b2703d6c0af221676f5f3c716ad55276086"},
 ]
 kedro-mlflow = [
     {file = "kedro_mlflow-0.7.3.tar.gz", hash = "sha256:f6b3ce37a24e4f56402cfe12ac966824a9b1bc9fe777d60365ff68246e21f288"},
