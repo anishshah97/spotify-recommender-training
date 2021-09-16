@@ -2,10 +2,12 @@ import dask.dataframe as dd
 import dask.distributed as d_dist
 from dask.dataframe.core import repartition
 from dask.distributed import Client
+from loguru import logger
 
 
 def select_track_features(track_features):
     client = d_dist.client._get_global_client() or Client()
+    logger.info(track_features.columns)
     desired_spotify_track_features = [
         "track_spid",
         "track_danceability",

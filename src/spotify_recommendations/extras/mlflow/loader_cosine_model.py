@@ -1,15 +1,16 @@
 """
 Module for loading custom Cosine Similarity model using pandas as a pseduo db
 """
-# TODO: Rename as this can be used for general joblib/pickle loading
 import inspect
 import json
 import logging
 import os
 import pickle
-import shutil
 import tempfile
 from copy import deepcopy
+from distutils.dir_util import copy_tree
+# TODO: Rename as this can be used for general joblib/pickle loading
+from pathlib import Path
 
 import joblib
 import mlflow
@@ -130,15 +131,26 @@ def save_model(
     if input_example is not None:
         _save_example(mlflow_model, input_example, path)
 
-    # Save model using pickle or joblib
+    # TODO: Move code copying functions to utils
+    # current_file_dir = Path(__file__).parent.resolve()
+    # # TODO: Remove hard coding in the loading scripts and pathing
+    # # BUG: Matching naming convention of current code base before injecting into mlproject
+    # new_code_dir = Path(path, "spotify_recommendations", "extras", "mlflow")
+    # copy_tree(str(current_file_dir), str(new_code_dir))
+    # for main_path, sub_paths, _ in os.walk(path):
+    #     for sub_path in sub_paths:
+    #         code_path = Path(main_path, sub_path)
+    #         init_file = Path(code_path, "__init__.py")
+    #         init_file.touch(exist_ok=True)
+    #         f = open(init_file)
+    #         f.close()
 
-    # pickle.dump(cosine_model, open(model_data_path, "wb"))
-    # joblib.dump(cosine_model, model_data_path)
     cosine_model.db.to_parquet(model_data_path)
 
     pyfunc.add_to_model(
         mlflow_model,
-        loader_module="spotify_recommendations.extras.mlflow.cosine_model",
+        # code="spotify_recommendations",
+        loader_module="spotify_recommendations.extras.mlflow.loader_cosine_model",
         data=model_data_subpath,
         env=_CONDA_ENV_FILE_NAME,
     )

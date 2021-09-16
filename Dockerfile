@@ -1,10 +1,11 @@
 ARG BASE_IMAGE=python:3.8-buster
 FROM $BASE_IMAGE
 
-# install project requirements
-#TODO: Replace with poetry as opposed to pip?
-COPY src/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt && rm -f /tmp/requirements.txt
+COPY poetry.lock pyproject.toml ./
+RUN pip3 install --upgrade pip && \
+    pip3 install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-dev
 
 # add kedro user
 ARG KEDRO_UID=999
@@ -15,10 +16,11 @@ RUN groupadd -f -g ${KEDRO_GID} kedro_group && \
 # copy the whole project except what is in .dockerignore
 WORKDIR /home/kedro
 COPY . .
+RUN pip3 install -e src
 RUN chown -R kedro:${KEDRO_GID} /home/kedro
 USER kedro
 RUN chmod -R a+w /home/kedro
 
-EXPOSE 8888
+EXPOSE 5000
 
-CMD ["kedro", "run"]
+CMD [ "/home/kedro/mlflow_serve.sh" ]

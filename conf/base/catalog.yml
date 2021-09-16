@@ -65,17 +65,48 @@ selected_mpd_track_features:
   type: dask.ParquetDataSet
   filepath: ${DATA_DIR}/04_feature/selected_mpd_track_features
 
+inference_example:
+  type: pandas.ParquetDataSet
+  filepath: ${DATA_DIR}/05_model_input/inference_example.parquet
+
+mpd_cleaning_notification:
+  type: pickle.PickleDataSet
+  filepath: ${DATA_DIR}/02_intermediate/mpd_cleaning_notification.pkl
+
 # playlist_training:
 #   type: dask.ParquetDataSet
 #   filepath: ${DATA_DIR}/05_model_input/playlist_training
 
-cosine_model:
-  type: kedro_mlflow.io.artifacts.MlflowArtifactDataSet
-  data_set:
-    type: kedro_mlflow.io.models.MlflowModelSaverDataSet
-    flavor: spotify_recommendations.extras.mlflow.cosine_model
-    pyfunc_workflow: python_model # or loader_module
-    filepath: ${DATA_DIR}/06_models/cosine_model
 # cosine_model:
-#   type: pickle.PickleDataSet
+#   type: kedro_mlflow.io.artifacts.MlflowArtifactDataSet
+#   data_set:
+#     type: kedro_mlflow.io.models.MlflowModelSaverDataSet
+#     flavor: spotify_recommendations.extras.mlflow.pyfunc_cosine_model
+#     pyfunc_workflow: python_model # or loader_module
+#     filepath: ${DATA_DIR}/06_models/cosine_model
+
+# cosine_model:
+#   type: kedro_mlflow.io.models.MlflowModelSaverDataSet
+#   flavor: spotify_recommendations.extras.mlflow.loader_cosine_model
+#   pyfunc_workflow: loader_module
 #   filepath: ${DATA_DIR}/06_models/cosine_model
+#   versioned: false
+
+# cosine_model:
+#   type: kedro_mlflow.io.models.MlflowModelSaverDataSet
+#   flavor: spotify_recommendations.extras.mlflow.pyfunc_cosine_model
+#   pyfunc_workflow: python_model # or loader_module
+#   filepath: ${DATA_DIR}/06_models/model
+#   versioned: false
+
+cosine_model:
+  type: pickle.PickleDataSet
+  filepath: ${DATA_DIR}/06_models/cosine_model
+
+cosine_model_db:
+  type: pandas.ParquetDataSet
+  filepath: ${DATA_DIR}/06_models/db.parquet
+
+prediction:
+  type: pickle.PickleDataSet
+  filepath: ${DATA_DIR}/07_model_output/prediction.pkl

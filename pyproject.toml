@@ -37,6 +37,8 @@ scikit-learn = "^0.24.2"
 networkx = "^2.6.2"
 pymongo = {extras = ["srv"], version = "^3.12.0"}
 kedro-docker = "^0.2.2"
+mlflow = "^1.20.1"
+boto3 = "^1.18.41"
 
 [tool.poetry.dev-dependencies]
 ipywidgets = "^7.6.3"

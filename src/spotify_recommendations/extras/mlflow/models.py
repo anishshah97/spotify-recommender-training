@@ -2,16 +2,34 @@ import mlflow.pyfunc
 from loguru import logger
 
 
+class CosineModelWrapper(mlflow.pyfunc.PythonModel):
+    def load_context(self, context):
+        import pandas as pd
+
+        # load tokenizer and model from artifacts in model context
+        self.model = CosineModel(pd.read_parquet(context.artifacts["db.parquet"]))
+
+    def predict(self, context, model_input):
+        import pandas as pd
+
+        return self.model.predict(model_input)
+
+
 class CosineModel(mlflow.pyfunc.PythonModel):
 
     def __init__(self, db):
         self.db = db
 
-    def predict(self, query_df):
-        return query_df.apply(lambda row: self._predict(row["track_ids"], row["n"]), axis=1)
+    def predict(self, model_input):
+        import pandas as pd
 
-    def _predict(self, ids, n=5):
-        logger.info(ids)
+        return model_input.apply(lambda row: self._predict(row["track_ids"], row["n"]), axis=1)
+
+    def _predict(self, _ids, n=5):
+        if isinstance(_ids, str):
+            ids = eval(_ids)
+        else:
+            ids = _ids
         import numpy as np
         from sklearn.metrics.pairwise import cosine_similarity
 
@@ -26,6 +44,7 @@ class CosineModel(mlflow.pyfunc.PythonModel):
         )
         top_n_indices = np.argpartition(similarities, -n, axis=1)[:, -n:]
         top_n_predictions = candidate_df.iloc[top_n_indices[0]].index.tolist()
+        logger.info(top_n_predictions)
 
         return top_n_predictions
 

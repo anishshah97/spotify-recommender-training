@@ -18,9 +18,12 @@ logs
 notebooks
 references
 results
+dev_scripts
+
 
 # except the following
 !logs/.gitkeep
 !notebooks/.gitkeep
 !references/.gitkeep
 !results/.gitkeep
+

@@ -12,7 +12,7 @@
       "args": [
         "run",
         "--pipeline",
-        "perform_cosine_experiment"
+        "mpd_cosine_ml"
       ],
       "cwd": "${workspaceFolder}",
       "env": {

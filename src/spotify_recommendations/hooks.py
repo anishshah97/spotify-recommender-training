@@ -46,7 +46,9 @@ class ProjectHooks:
         self, conf_paths: Iterable[str], env: str, extra_params: Dict[str, Any],
     ) -> TemplatedConfigLoader:
         return TemplatedConfigLoader(conf_paths, globals_dict={
-            "DATA_DIR": os.environ.get("DATA_DIR", "data")
+            "DATA_DIR": os.environ.get("DATA_DIR", "data"),
+            "MLFLOW_TRACKING_URI": os.environ.get("MLFLOW_TRACKING_URI", "mlruns"),
+            "EXPERIMENT_NAME": os.environ.get("EXPERIMENT_NAME", "spotify_recommendations")
         })
 
     @hook_impl
