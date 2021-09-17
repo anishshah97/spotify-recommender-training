@@ -44,7 +44,7 @@ spec:
             - name: EXPERIMENT_NAME
               value: "spotify_recommendations"
             - name: MODEL_ID
-              value: c59730008fac4f249afd527798f57c4e
+              value: "c59730008fac4f249afd527798f57c4e"
           # envFrom:
           #   - secretRef:
           #       name: mysecret
