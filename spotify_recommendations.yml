@@ -36,8 +36,17 @@ spec:
             privileged: false
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
-          envFrom:
-            - secretRef:
-                name: mysecret
+          env:
+            - name: DATA_DIR
+              value: "s3://spotify_recommendations"
+            - name: MLFLOW_TRACKING_URI
+              value: "http://deplo-mlflo-16g0oyp6k65hv-5cd5faf094caf332.elb.us-east-1.amazonaws.com/"
+            - name: EXPERIMENT_NAME
+              value: "spotify_recommendations"
+            - name: MODEL_ID
+              value: c59730008fac4f249afd527798f57c4e
+          # envFrom:
+          #   - secretRef:
+          #       name: mysecret
           ports:
             - containerPort: 5000
