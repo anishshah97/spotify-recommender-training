@@ -36,5 +36,8 @@ spec:
             privileged: false
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
+          envFrom:
+            - secretRef:
+                name: mysecret
           ports:
             - containerPort: 5000

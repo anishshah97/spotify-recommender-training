@@ -25,14 +25,14 @@ from .scrape_spotipy import (
 
 def prepare_mpd_dataset(**kwargs):
     return Pipeline([
-        # node(obfuscate_mpd, "cleaned_mpd_playlists",
-        #      "split_mpd_pids_to_tids", tags=["training"]),
-        # node(select_track_features, "mpd_track_features",
-        #      "selected_mpd_track_features", tags=["training"]),
-        # node(select_mpd_features, "cleaned_mpd_playlists",
-        #      "selected_mpd_playlist_features", tags=["training"]),
-        # node(create_inference_example, ["split_mpd_pids_to_tids"],
-        #      "inference_example", tags=["training"])
+        node(obfuscate_mpd, "cleaned_mpd_playlists",
+             "split_mpd_pids_to_tids", tags=["training"]),
+        node(select_track_features, "mpd_track_features",
+             "selected_mpd_track_features", tags=["training"]),
+        node(select_mpd_features, "cleaned_mpd_playlists",
+             "selected_mpd_playlist_features", tags=["training"]),
+        node(create_inference_example, ["split_mpd_pids_to_tids"],
+             "inference_example", tags=["training"])
     ])
 
 
@@ -68,14 +68,10 @@ def perform_cosine_experiment(**kwargs):
     return Pipeline([
         node(save_pandas_cosine_model, "selected_mpd_track_features",
              "cosine_model", tags=["training"]),
-        # node(save_cosine_model_db, "selected_mpd_track_features",
-        #      "cosine_model_db", tags=["training"]),
-        # node(evaluate_cosine_model, ["cosine_model",
-        #                              "split_mpd_pids_to_tids"], "all_scores", tags=["training", "evaluation"]),
+        node(evaluate_cosine_model, ["cosine_model",
+                                     "split_mpd_pids_to_tids"], "all_scores", tags=["training", "evaluation"]),
         node(predict_w_mlflow, ["cosine_model", "inference_example"],
              "prediction", tags=["training", "inference"])
-        # node(predict_w_db, ["cosine_model_db", "inference_example"],
-        #      "prediction", tags=["training", "inference"]),
     ])
 
 
