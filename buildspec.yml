@@ -1,22 +1,49 @@
+---
 version: 0.2
+
 phases:
+  install:
+    runtime-versions:
+      python: latest
+    commands:
+      - echo 'about to call dockerd'
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - curl -sS -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/darwin/amd64/aws-iam-authenticator
+      # Get latest stable release kubectl
+      - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+        # Command for specific kubectl version:
+        #- curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl ./aws-iam-authenticator
+      - echo `kubectl version`
+      - export PATH=$PWD/:$PATH
+      - python -m pip install --upgrade --force pip
+      - apt-get update && apt-get -y install jq  && pip install --upgrade awscli
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=${REPO_ECR}
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      # - pip3 install -r requirements.txt
+      # - python -m pytest test_main.py
+      - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' spotify_recommendations.yml
+      - $(aws ecr get-login --no-include-email)
+      - export KUBECONFIG=$HOME/.kube/config
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build --tag $REPOSITORY_URI:$TAG .
+
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:$TAG
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --role-arn $EKS_KUBECTL_ROLE_ARN
+      - kubectl apply -f spotify_recommendations.yml
+      - printf '[{"name":"spotify_recommendations","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
+artifacts:
+  files: build.json
+
+env:
+  variables:
+    EXPERIMENT_NAME: spotify-recommendations
+    MODEL_ID: c59730008fac4f249afd527798f57c4e
+  secrets-manager:
+    DATA_DIR: arn:aws:secretsmanager:us-east-1:017375595766:secret:spotify-recommender-training-0N0tu5:DATA_DIR
+    MLFLOW_TRACKING_URI: arn:aws:secretsmanager:us-east-1:017375595766:secret:spotify-recommender-training-0N0tu5:MLFLOW_TRACKING_URI

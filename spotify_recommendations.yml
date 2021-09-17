@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spotify-recommendations
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 5000
+  selector:
+    app: spotify-recommendations
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotify-recommendations
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 2
+  selector:
+    matchLabels:
+      app: spotify-recommendations
+  template:
+    metadata:
+      labels:
+        app: spotify-recommendations
+    spec:
+      containers:
+        - name: spotify-recommendations
+          image: CONTAINER_IMAGE
+          securityContext:
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          ports:
+            - containerPort: 5000
