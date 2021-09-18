@@ -21,6 +21,6 @@ RUN chown -R kedro:${KEDRO_GID} /home/kedro
 USER kedro
 RUN chmod -R a+w /home/kedro
 
-EXPOSE 5000
+EXPOSE ${PORT:-5000}
 
 CMD [ "/home/kedro/mlflow_serve.sh" ]

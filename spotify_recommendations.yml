@@ -47,6 +47,8 @@ spec:
               value: "spotify_recommendations"
             - name: MODEL_ID
               value: "c59730008fac4f249afd527798f57c4e"
+            - name: PORT
+              value: 5000
           # envFrom:
           #   - secretRef:
           #       name: mysecret
