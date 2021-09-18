@@ -31,7 +31,9 @@ spec:
     spec:
       containers:
         - name: spotify-recommendations
-          image: CONTAINER_IMAGE
+          # image: CONTAINER_IMAGE
+          image: us-west1-docker.pkg.dev/mlops-content1/spotify-recommendations/spotify-recommendations:v1
+          image: 
           securityContext:
             privileged: false
             readOnlyRootFilesystem: false
