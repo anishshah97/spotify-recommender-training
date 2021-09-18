@@ -2,6 +2,137 @@
 
 ## Overview
 
+The Problem @ ✋
+
+- I like Spotify and I like discovering music
+- Music generation is very popularity based nowadays
+- Discovery/interaction with music happens via playlists mostly nowadays
+- Music curation tools for playlists are scarce
+- Spotify has a lot of tools for interacting with their data/features
+
+![](./static/imgs/discover-weekly.png)
+
+Million Playlist Dataset
+![](./static/imgs/mpd-logo.png)
+
+- Spotify hosted the 2018 RecSys challenge of 1 Million Playlists made by users
+- Publicly released the dataset
+- No associated metadata of tracks
+
+![](./static/imgs/mpd-overview.png)
+![](./static/imgs/mpd-features-json.png)
+
+Track Metadata - Spotify Web API
+![](./static/imgs/spotify-web-auth-flow.png)
+![](./static/imgs/spotify-audio-features.json.png)
+
+EDA - MPD + Track Metadata
+![](./static/imgs/danceability-eda-example.png)
+![](./static/imgs/eda-most-featured-artists-mpd.png)
+
+The Approach 🕵️
+
+- Build infrastructure/tooling to easily build and deploy Spotify-based applications and models
+- Do so in a streamlined reproducible fashion
+- Automate as much as possible
+- Infrastructure-as-code as much as possible
+- Make it easy for a SWE/DE/DS/MLE/DevOps person to extend upon
+- Use a MLFlow wrapped custom cosine similarity model as a test of E2E tooling from the ML end
+
+Infrastructure considerations
+
+- arbitrary custom model can be made easily
+- models can connect to growing data sources
+- deployment of said model is straightforward
+- can be managed by ci/cd easily
+- adaptable to data, models, and code changes
+
+The Experiment - Let’s Keep it Simple
+
+- Data: Create training and test data by way of obfuscation on MPD
+- Take all the playlists and randomly remove a certain amount of songs and use as training data
+- Use those removed songs and use as testing data
+- Task: Use training songs in the playlist to predict the songs that were removed
+  Method: Aggregate features of the songs to create a representative feature representation for the playlist w.r.t songs and use a similarity search
+- Features used: Spotify given track features
+- Search: Cosine Similarity
+
+Introducing SpotifyPlaylists! 🎶
+
+High Level Software Architecture
+![](./static/imgs/basic-app-example.png)
+![](./static/imgs/simple-etl-serving.png)
+![](./static/imgs/advanced-etl-serving.png)
+
+Deployment Stack
+![](./static/imgs/cdk-visualized.png)
+![](./static/imgs/cloudformation-visualized.png)
+![](./static/imgs/my-cloudformation-stacks.png)
+
+CodePipeline Stack
+![](./static/imgs/codepipeline-visualized.png)
+![](./static/imgs/my-cloudformation-codepipeline-stack.png)
+![](./static/imgs/my-cloudformation-codepipeline-paramters.png)
+![](./static/imgs/my-codepipeline.png)
+
+Pre-requirements: EKS Cluster (using eksctl)
+![](./static/imgs/my-cluster.png)
+
+MLFlow Stack
+![](./static/imgs/mlflow-cdk.png)
+![](./static/imgs/mlflow-cdk-output.png)
+![](./static/imgs/my-mlflow-cdk-stack.png)
+![](./static/imgs/my-mlflow-cdk-outputs)
+![](./static/imgs/mlflow-dashboard-example)
+
+Codebase - Kedro
+![](./static/imgs/kedro-architecture.png)
+![](./static/imgs/data-engineering-data-layers.png)
+![](./static/imgs/kedro-node-reuse-visualized.png)
+
+An Aside - DAGS
+![](./static/imgs/kubeflow-dag-example.png)
+![](./static/imgs/airflow-dag-example.png)
+
+Kedro - MLFlow
+![](./static/imgs/kedro-mflow-use-cases-visualized.png)
+
+Training
+![](./static/imgs/my-kedro-etl.png)
+![](./static/imgs/my-kedro-training.png)
+
+The Dynamic Duo in Action
+![](./static/imgs/my-deployed-mlflow.png)
+![](./static/imgs/my-mlflow-model-artifact.png)
+![](./static/imgs/my-mlflow-model-registry.png)
+
+Pipelines as Models??? - Inference Served
+![](./static/imgs/my-kedro-inference.png)
+
+You’re sure that’s the model?
+![](./static/imgs/mlflow-models-registry-serving-use-case.png)
+
+Demo App
+
+- MLFlow: http://deplo-mlflo-16g0oyp6k65hv-5cd5faf094caf332.elb.us-east-1.amazonaws.com/#/
+- Model Endpoint:
+  https://spotify-recommendations-crun-ctreuw63uq-uw.a.run.app/invocations
+
+Demo Video of Endpoint
+
+Recap
+![](./static/imgs/e2e-cicd-etl-mlops-pipeline.png)
+
+#TODO:
+
+- Add Prometheus and Grafana metrics
+- Replace with an actually good model
+- Connect all components of my application (Front-end and Back-end)
+- Use MLFlow Model Registry to add streamlined Blue/Green Deployments and Canary Deployments
+- Use CDK to spin up the CloudFormation template to spin up the aforementioned CodePipeline Stack
+- Fix codebase to package minimal requirements for a better served model container
+- Port from custom containers to something like a Seldon deployment if possible
+
 ## Development
 
 ### Kedro Overview
@@ -45,11 +176,7 @@ To configure the coverage threshold, go to the `.coveragerc` file.
 
 For the `poetry` workflow, to generate/update dependencies, use the `poetry add` functionality alongside adjusting the `pyproject.toml` to take advantages of `poetry`'s automatic dependancy resolution
 
-If you are using the `kedro install` workflow, to generate or update the dependency requirements for your project:
-
-```
-kedro build-reqs
-```
+If you are using the `kedro install` workflow, to generate or update the dependency requirements for your project: `kedro build-reqs`
 
 This will copy the contents of `src/requirements.txt` into a new file `src/requirements.in` which will be used as the source for `pip-compile`. You can see the output of the resolution by opening `src/requirements.txt`.
 
