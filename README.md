@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Problem @ ✋
+### The Problem @ ✋
 
 - I like Spotify and I like discovering music
 - Music generation is very popularity based nowadays
@@ -12,7 +12,7 @@ The Problem @ ✋
 
 ![](./static/imgs/discover-weekly.png)
 
-Million Playlist Dataset
+### Million Playlist Dataset
 ![](./static/imgs/mpd-logo.png)
 
 - Spotify hosted the 2018 RecSys challenge of 1 Million Playlists made by users
@@ -24,13 +24,13 @@ Million Playlist Dataset
 
 Track Metadata - Spotify Web API
 ![](./static/imgs/spotify-web-auth-flow.png)
-![](./static/imgs/spotify-audio-features.json.png)
+![](./static/imgs/spotify-audio-features-json.png)
 
 EDA - MPD + Track Metadata
 ![](./static/imgs/danceability-eda-example.png)
 ![](./static/imgs/eda-most-featured-artists-mpd.png)
 
-The Approach 🕵️
+### The Approach 🕵️
 
 - Build infrastructure/tooling to easily build and deploy Spotify-based applications and models
 - Do so in a streamlined reproducible fashion
@@ -39,7 +39,7 @@ The Approach 🕵️
 - Make it easy for a SWE/DE/DS/MLE/DevOps person to extend upon
 - Use a MLFlow wrapped custom cosine similarity model as a test of E2E tooling from the ML end
 
-Infrastructure considerations
+#### Infrastructure considerations
 
 - arbitrary custom model can be made easily
 - models can connect to growing data sources
@@ -47,17 +47,17 @@ Infrastructure considerations
 - can be managed by ci/cd easily
 - adaptable to data, models, and code changes
 
-The Experiment - Let’s Keep it Simple
+#### The Experiment - Let’s Keep it Simple
 
 - Data: Create training and test data by way of obfuscation on MPD
 - Take all the playlists and randomly remove a certain amount of songs and use as training data
 - Use those removed songs and use as testing data
 - Task: Use training songs in the playlist to predict the songs that were removed
-  Method: Aggregate features of the songs to create a representative feature representation for the playlist w.r.t songs and use a similarity search
+- Method: Aggregate features of the songs to create a representative feature representation for the playlist w.r.t songs and use a similarity search
 - Features used: Spotify given track features
 - Search: Cosine Similarity
 
-Introducing SpotifyPlaylists! 🎶
+#### Introducing SpotifyPlaylists! 🎶
 
 High Level Software Architecture
 ![](./static/imgs/basic-app-example.png)
