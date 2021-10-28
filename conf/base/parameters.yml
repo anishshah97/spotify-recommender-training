@@ -3,3 +3,4 @@ artist_id_col: "artist_id"
 
 track_feature_type: "track"
 artist_feature_type: "artist"
+track_metadata_type: "track_metadata"

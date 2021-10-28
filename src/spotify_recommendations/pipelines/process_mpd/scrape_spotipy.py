@@ -7,6 +7,7 @@ from pathlib import Path
 
 import dask.dataframe as dd
 import dask.distributed as d_dist
+import flatdict
 import pandas as pd
 import spotipy
 from dask.distributed import Client
@@ -20,6 +21,13 @@ def determine_path_for_features(**kwargs):
     mpd_features_path = Path(data_path, "03_primary", "mpd_track_features")
     mpd_features_path.mkdir(exist_ok=True)
     return mpd_features_path
+
+
+def determine_path_for_metadata(**kwargs):
+    data_path = Path(Path().resolve(), os.environ.get("DATA_DIR", "data"))
+    mpd_track_metadata_path = Path(data_path, "03_primary", "mpd_track_metadata")
+    mpd_track_metadata_path.mkdir(exist_ok=True)
+    return mpd_track_metadata_path
 
 
 def chunk(data, n):
@@ -40,6 +48,14 @@ def get_artist_features(spotify, artist_ids):
         logger.error("Too many tracks")
     else:
         return spotify.artists(artist_ids)
+
+
+def get_track_metadata(spotify, track_ids):
+    time.sleep(0.25)
+    if len(track_ids) > 50:
+        logger.error("Too many tracks")
+    else:
+        return spotify.tracks(track_ids)
 
 
 def flatten_artist_features(artist_features):
@@ -116,6 +132,65 @@ def get_artist_features_df(spotify, artist_ids):
 # TODO: Pass kwargs bc no need for explicit reference to spotify needed here?
 
 
+def get_track_metadata_df(spotify, track_ids):
+    # total_pages_saved_songs = get_saved_track_page_count(spotify)
+    chunked_track_ids = chunk(track_ids, 50)
+    logger.info(f"Processing {len(chunked_track_ids)} chunks")
+    chunked_track_metadata = [
+        get_track_metadata(spotify, chunked_tracks)
+        for chunked_tracks in chunked_track_ids
+    ]
+    # track_metadata = [
+    #     val for val in list(chain.from_iterable(chunked_track_metadata)) if val
+    # ]
+
+    flattened_track_metadata = [
+        dict(flatdict.FlatterDict(track)) for track in chunked_track_metadata
+    ]
+    full_track_metadata_df = pd.DataFrame(flattened_track_metadata)
+    # BUG: To deal with dask initial pass which will pass a foo value
+    if len(full_track_metadata_df.columns) == 1:
+        return False
+    track_col_renames = {
+        "tracks:0:album:album_type": "album_type",
+        "tracks:0:album:artists:0:external_urls:spotify": "album_artist_spurl",
+        "tracks:0:album:artists:0:id": "album_artist_spid",
+        "tracks:0:album:artists:0:name": "album_artist_name",
+        "tracks:0:album:artists:0:type": "album_artist_type",
+        "tracks:0:album:external_urls:spotify": "album_spurl",
+        "tracks:0:album:id": "album_spid",
+        "tracks:0:album:images:0:url": "album_img_url",
+        "tracks:0:album:name": "album_name",
+        "tracks:0:album:release_date": "album_release_date",
+        "tracks:0:album:total_tracks": "album_tracks_count",
+        "tracks:0:album:type": "album_track_type",
+        "tracks:0:artists:0:external_urls:spotify": "artist_spurl",
+        "tracks:0:artists:0:id": "artist_spid",
+        "tracks:0:artists:0:name": "artist_name",
+        "tracks:0:artists:0:type": "artist_type",
+        "tracks:0:duration_ms": "track_duration_ms",
+        "tracks:0:explicit": "track_explicit",
+        "tracks:0:external_ids:isrc": "track_isrc",
+        "tracks:0:external_urls:spotify": "track_spurl",
+        "tracks:0:id": "track_spid",
+        "tracks:0:is_local": "track_is_local",
+        "tracks:0:name": "track_name",
+        "tracks:0:popularity": "track_popularity",
+        "tracks:0:preview_url": "track_preview_url",
+        "tracks:0:track_number": "track_number",
+        "tracks:0:type": "track_type",
+    }
+    des_tracks_cols = list(track_col_renames.values())
+    track_metadata_df = full_track_metadata_df.rename(track_col_renames, axis=1)[
+        des_tracks_cols
+    ]
+    track_metadata_df["time_pulled"] = datetime.datetime.now(
+        datetime.timezone.utc
+    ).isoformat()
+    logger.info(f"Returning track_features_df of size {track_metadata_df.shape}")
+    return track_metadata_df
+
+
 def gather_spotify_features_data(s, spotify, id_type="track", base_path=""):
     import uuid
     from pathlib import Path
@@ -143,14 +218,21 @@ def gather_spotify_features_data(s, spotify, id_type="track", base_path=""):
             'track_uri': "string",
             'track_valence': "float"
         }
+    elif id_type == "track_metadata":
+        _feature_scraper = get_track_metadata_df
+        _meta = {}
     elif id_type == "artist":
         _feature_scraper = get_artist_features_df
+        _meta = {}
     else:
         raise ValueError(f"Improper ID type: {id_type}")
 
     _ids = s.unique().tolist()
     logger.info(f"Scraping {len(_ids)} {id_type}s")
     feature_df = _feature_scraper(spotify, _ids)
+    # BUG: Deal with foo initial pass of dask
+    if isinstance(feature_df, bool):
+        return True
     time_pulled = datetime.datetime.now(datetime.timezone.utc).isoformat()
     feature_df["time_pulled"] = time_pulled
     for col, dtype in _meta.items():
@@ -197,7 +279,8 @@ def get_spotify_credentials(**kwargs):
     return spotify
 
 
-def check_and_seed_feature_folder(mpd_track_ids, spotify, id_type="track", base_path=""):
+# TODO: DEAL with kwargs betters
+def check_and_seed_feature_folder(mpd_track_ids, spotify, id_type="track", base_path="", kwargs={}):
     seed_id = determine_remaining_ids_for_dask(
         mpd_track_ids, dd.from_pandas(pd.Series([], dtype="string"), npartitions=1)).compute()[0:1]
     _ = gather_spotify_features_data(seed_id, spotify, id_type, base_path)

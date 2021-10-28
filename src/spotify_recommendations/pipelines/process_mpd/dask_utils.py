@@ -9,4 +9,4 @@ def dask_dedup(ddf, subset, kwargs={}):
     deduped_ddf = ddf.drop_duplicates(
         subset=subset)
 
-    return deduped_ddf
+    return deduped_ddf, True

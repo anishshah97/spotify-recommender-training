@@ -27,18 +27,19 @@
 # limitations under the License.
 
 """Project pipelines."""
-from sys import version_info
+# from sys import version_info
 from typing import Dict
 
-import kedro
-import kedro_mlflow
-import numpy
-import pandas
-import sklearn
+# import kedro
+# import kedro_mlflow
+# import numpy
+# import pandas
+# import sklearn
 from kedro.pipeline import Pipeline
-from kedro_mlflow.pipeline import pipeline_ml_factory
 
 from .pipelines import process_mpd as mpd
+
+# from kedro_mlflow.pipeline import pipeline_ml_factory
 
 
 def register_pipelines() -> Dict[str, Pipeline]:
@@ -48,48 +49,52 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
     """
     prepare_mpd = mpd.prepare_mpd_dataset()
-    scrape_spotify_for_mpd = mpd.scrape_spotify_for_mpd()
+    scrape_spotify_for_mpd_track_features = mpd.scrape_spotify_for_mpd_track_features()
     insert_into_mongo = mpd.insert_into_mongo()
     perform_cosine_experiment = mpd.perform_cosine_experiment()
-    ml_pipeline = mpd.ml_pipeline()
+    scrape_spotify_for_mpd_track_metadata = mpd.scrape_spotify_for_mpd_track_metadata()
+    clean_mpd_for_track_scraping = mpd.clean_mpd_for_track_scraping()
+    # ml_pipeline = mpd.ml_pipeline()
 
-    PYTHON_VERSION = "{major}.{minor}.{micro}".format(major=version_info.major,
-                                                      minor=version_info.minor,
-                                                      micro=version_info.micro)
+    # PYTHON_VERSION = "{major}.{minor}.{micro}".format(major=version_info.major,
+    #                                                   minor=version_info.minor,
+    #                                                   micro=version_info.micro)
 
-    conda_env = {
-        'channels': ['defaults'],
-        'dependencies': [
-            'python={}'.format(PYTHON_VERSION),
-            'pip',
-            {
-                'pip': [
-                    'mlflow',
-                    'pandas=={}'.format(pandas.__version__),
-                    'numpy=={}'.format(numpy.__version__),
-                    'scikit-learn=={}'.format(sklearn.__version__),
-                    'kedro=={}'.format(kedro.__version__),
-                    'kedro-mlflow=={}'.format(kedro_mlflow.__version__)
-                ],
-            },
-        ],
-        'name': 'cosine_model'
-    }
+    # conda_env = {
+    #     'channels': ['defaults'],
+    #     'dependencies': [
+    #         'python={}'.format(PYTHON_VERSION),
+    #         'pip',
+    #         {
+    #             'pip': [
+    #                 'mlflow',
+    #                 'pandas=={}'.format(pandas.__version__),
+    #                 'numpy=={}'.format(numpy.__version__),
+    #                 'scikit-learn=={}'.format(sklearn.__version__),
+    #                 'kedro=={}'.format(kedro.__version__),
+    #                 'kedro-mlflow=={}'.format(kedro_mlflow.__version__)
+    #             ],
+    #         },
+    #     ],
+    #     'name': 'cosine_model'
+    # }
 
-    mpd_cosine_ml = pipeline_ml_factory(
-        training=ml_pipeline.only_nodes_with_tags("training"),
-        inference=ml_pipeline.only_nodes_with_tags("inference"),
-        input_name="inference_example",
-        model_name="spotify_recommendations",
-        conda_env=conda_env,
-        model_signature="auto",
-    )
+    # mpd_cosine_ml = pipeline_ml_factory(
+    #     training=ml_pipeline.only_nodes_with_tags("training"),
+    #     inference=ml_pipeline.only_nodes_with_tags("inference"),
+    #     input_name="inference_example",
+    #     model_name="spotify_recommendations",
+    #     conda_env=conda_env,
+    #     model_signature="auto",
+    # )
 
     return {
         "__default__": Pipeline([]),
-        "prepare_mpd": prepare_mpd,
-        "scrape_spotify_for_mpd": scrape_spotify_for_mpd,
+        "scrape_spotify_for_mpd_track_features": scrape_spotify_for_mpd_track_features,
         "insert_into_mongo": insert_into_mongo,
+        "prepare_mpd": prepare_mpd,
         "perform_cosine_experiment": perform_cosine_experiment,
-        "mpd_cosine_ml": mpd_cosine_ml
+        "scrape_spotify_for_mpd_track_metadata": scrape_spotify_for_mpd_track_metadata,
+        "clean_mpd_for_track_scraping": clean_mpd_for_track_scraping
+        # "mpd_cosine_ml": mpd_cosine_ml
     }

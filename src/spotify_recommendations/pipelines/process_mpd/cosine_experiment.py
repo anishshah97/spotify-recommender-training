@@ -2,8 +2,8 @@ import os
 
 import dask.dataframe as dd
 import dask.distributed as d_dist
-import mlflow
-import mlflow.pyfunc
+# import mlflow
+# import mlflow.pyfunc
 import numpy as np
 import pandas as pd
 from dask.dataframe.core import repartition
@@ -11,7 +11,7 @@ from dask.distributed import Client
 from loguru import logger
 from tqdm import tqdm
 
-from spotify_recommendations.extras.mlflow.models import CosineModel
+# from spotify_recommendations.extras.mlflow.models import CosineModel
 
 tqdm.pandas()
 

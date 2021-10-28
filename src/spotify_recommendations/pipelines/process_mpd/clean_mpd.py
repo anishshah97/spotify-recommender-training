@@ -15,7 +15,7 @@ from tqdm import tqdm
 # TODO: need to deal with s3 variant
 def determine_paths_to_scrape():
     data_path = Path(Path().resolve(), os.environ.get("DATA_DIR", "data"))
-    raw_mpd_dir = Path(data_path, "01_raw", "spotify_mpd")
+    raw_mpd_dir = Path(data_path, "01_raw", "spotify_million_playlist_dataset", "data")
     raw_mpd_slice_paths = {path.name.replace(
         ".json", ""): path for path in raw_mpd_dir.glob("mpd.slice.*.json")}
     cleaned_mpd_dir = Path(data_path, "02_intermediate", "cleaned_spotify_mpd")

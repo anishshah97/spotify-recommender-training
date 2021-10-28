@@ -4,12 +4,12 @@ project_name = "Spotify Recommendations"
 project_version = "0.17.4"
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
 force_grid_wrap = 0
-use_parentheses = true
-line_length = 88
+include_trailing_comma = true
 known_third_party = "kedro"
+line_length = 88
+multi_line_output = 3
+use_parentheses = true
 
 [tool.pytest.ini_options]
 addopts = """
@@ -17,37 +17,35 @@ addopts = """
 --cov src/spotify_recommendations -ra"""
 
 [tool.poetry]
+authors = ["Anish Shah <anish.shah.emails@gmail.com>"]
+description = ""
 name = "spotify_recommendations"
 version = "0.1.0"
-description = ""
-authors = ["Anish Shah <anish.shah.emails@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "~3.8"
-kedro = "^0.17.4"
-kedro-mlflow = "^0.7.3"
-dask = {extras = ["distributed"], version = "^2021.8.1"}
 bokeh = "^2.3.3"
-loguru = "^0.5.3"
-pyarrow = "^5.0.0"
-tqdm = "^4.62.1"
-python-dotenv = "^0.19.0"
-spotipy = "^2.19.0"
-scikit-learn = "^0.24.2"
-networkx = "^2.6.2"
-pymongo = {extras = ["srv"], version = "^3.12.0"}
-kedro-docker = "^0.2.2"
-mlflow = "^1.20.1"
 boto3 = "^1.18.41"
+dask = {extras = ["distributed"], version = "^2021.8.1"}
+kedro = "^0.17.4"
+kedro-docker = "^0.2.2"
+loguru = "^0.5.3"
+networkx = "^2.6.2"
+pyarrow = "^5.0.0"
+pymongo = {extras = ["srv"], version = "^3.12.0"}
+python = "~3.8"
+python-dotenv = "^0.19.0"
+scikit-learn = "^0.24.2"
+spotipy = "^2.19.0"
+tqdm = "^4.62.1"
 
 [tool.poetry.dev-dependencies]
+autopep8 = "^1.5.7"
+flake8 = "^3.9.2"
+grip = "^4.5.2"
 ipywidgets = "^7.6.3"
 jupyterlab = "^3.1.7"
 kedro-viz = "^3.14.0"
-flake8 = "^3.9.2"
-autopep8 = "^1.5.7"
-grip = "^4.5.2"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

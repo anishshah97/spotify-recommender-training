@@ -12,7 +12,7 @@
       "args": [
         "run",
         "--pipeline",
-        "mpd_cosine_ml"
+        "scrape_spotify_for_mpd_track_metadata"
       ],
       "cwd": "${workspaceFolder}",
       "env": {

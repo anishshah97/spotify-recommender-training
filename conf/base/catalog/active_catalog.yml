@@ -1,0 +1,70 @@
+cleaned_mpd_tracks:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/cleaned_spotify_mpd/*/tracks.parquet
+
+cleaned_mpd_playlists:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/cleaned_spotify_mpd/*/playlist.parquet
+
+deduped_cleaned_mpd_tracks:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/deduped_cleaned_mpd_tracks
+
+mpd_track_ids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/02_intermediate/deduped_cleaned_mpd_tracks
+  load_args:
+    columns: "track_id"
+
+mpd_track_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_features/*.parquet
+
+mpd_track_metadata:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_metadata/*.parquet
+
+scraped_mpd_track_feature_ids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_features/*.parquet
+  load_args:
+    columns: "track_spid"
+
+scraped_mpd_track_metadata_ids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/mpd_track_metadata/*.parquet
+  load_args:
+    columns: "track_spid"
+
+split_mpd_pids_to_tids:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/03_primary/split_mpd_pids_to_tids
+
+selected_mpd_playlist_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/04_feature/selected_mpd_playlist_features
+
+selected_mpd_track_features:
+  type: dask.ParquetDataSet
+  filepath: ${DATA_DIR}/04_feature/selected_mpd_track_features
+
+inference_example:
+  type: pandas.ParquetDataSet
+  filepath: ${DATA_DIR}/05_model_input/inference_example.parquet
+
+#BUG: Do i need this?
+mpd_cleaning_notification:
+  type: pickle.PickleDataSet
+  filepath: ${DATA_DIR}/02_intermediate/mpd_cleaning_notification.pkl
+
+cosine_model:
+  type: pickle.PickleDataSet
+  filepath: ${DATA_DIR}/06_models/cosine_model
+
+cosine_model_db:
+  type: pandas.ParquetDataSet
+  filepath: ${DATA_DIR}/06_models/db.parquet
+
+prediction:
+  type: pickle.PickleDataSet
+  filepath: ${DATA_DIR}/07_model_output/prediction.pkl
